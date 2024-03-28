@@ -1,6 +1,6 @@
-package com.data.encryption.interceptor;
+package encryption.interceptor;
 
-import com.data.encryption.annotation.SensitiveData;
+import encryption.annotation.SensitiveData;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -39,7 +39,7 @@ public class MybatisEncryption {
      * @param paramsObject paramsObject
      * @param <T>          <T>
      */
-    protected <T> void encrypt(T paramsObject) throws IllegalAccessException {
+    protected <T> void encrypt(T paramsObject) {
         if (paramsObject == null) {
             return;
         }
@@ -52,7 +52,7 @@ public class MybatisEncryption {
      * @param result result
      * @param <T>    <T>
      */
-    protected <T> void decrypt(T result) throws IllegalAccessException {
+    protected <T> void decrypt(T result) {
         if (result == null) {
             return;
         }
@@ -65,7 +65,7 @@ public class MybatisEncryption {
      * @param paramsObject paramsObject
      * @param <T>          <T>
      */
-    protected <T> void encryptList(List<T> paramsObject) throws IllegalAccessException {
+    protected <T> void encryptList(List<T> paramsObject) {
         if (paramsObject == null || paramsObject.isEmpty()) {
             return;
         }
@@ -78,7 +78,7 @@ public class MybatisEncryption {
      * @param result result
      * @param <T>    <T>
      */
-    protected <T> void decryptList(List<T> result) throws IllegalAccessException {
+    protected <T> void decryptList(List<T> result) {
         if (result == null || result.isEmpty()) {
             return;
         }

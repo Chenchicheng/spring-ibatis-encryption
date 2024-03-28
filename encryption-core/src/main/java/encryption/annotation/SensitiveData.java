@@ -1,4 +1,4 @@
-package com.data.encryption.annotation;
+package encryption.annotation;
 
 import java.lang.annotation.*;
 

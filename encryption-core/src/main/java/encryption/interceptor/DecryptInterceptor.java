@@ -1,4 +1,4 @@
-package com.data.encryption.interceptor;
+package encryption.interceptor;
 
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.Interceptor;
@@ -28,8 +28,6 @@ public class DecryptInterceptor extends MybatisEncryption implements Interceptor
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         Object resultObject = invocation.proceed();
-        long start = System.currentTimeMillis();
-        logger.debug("DecryptInterceptor start...");
         if (Objects.isNull(resultObject)) {
             return null;
         }
@@ -39,12 +37,10 @@ public class DecryptInterceptor extends MybatisEncryption implements Interceptor
         } else {
             decryptSingle(resultObject);
         }
-        long end = System.currentTimeMillis();
-        logger.debug("DecryptInterceptor end..., spendTime:{}", end - start);
         return resultObject;
     }
 
-    private void decryptBatch(List<Object> records) throws IllegalAccessException {
+    private void decryptBatch(List<Object> records) {
         long start = System.currentTimeMillis();
         logger.debug("Decrypt Batch start...");
         if (records == null || records.isEmpty()) {
@@ -58,7 +54,7 @@ public class DecryptInterceptor extends MybatisEncryption implements Interceptor
         logger.debug("Decrypt Batch end..., spendTime:{}", end - start);
     }
 
-    private void decryptSingle(Object result) throws IllegalAccessException {
+    private void decryptSingle(Object result) {
         long start = System.currentTimeMillis();
         logger.debug("Decrypt Single start...");
         if (!sensitive(result)) {

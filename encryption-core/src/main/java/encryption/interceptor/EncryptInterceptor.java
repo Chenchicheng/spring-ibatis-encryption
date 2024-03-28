@@ -1,4 +1,4 @@
-package com.data.encryption.interceptor;
+package encryption.interceptor;
 
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.parameter.ParameterHandler;

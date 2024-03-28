@@ -1,23 +1,22 @@
-package com.data.encryption.interceptor;
+package encryption.interceptor;
 
-import com.data.encryption.annotation.SensitiveField;
-import org.springframework.stereotype.Component;
+import cn.hutool.core.collection.CollUtil;
+import encryption.model.EncryptModel;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 普通aes加解密
+ * 字段简易加解密基类
  *
  * @author chenchicheng
- * @date 2023/8/12
+ * @date 2024/3/27
  */
-@Component
-public class CommonFieldEncryption extends BaseFieldEncryption {
+public abstract class SimpleFieldEncryption extends BaseFieldEncryption {
 
     @Override
-    public <T> void encryptList(List<T> objects) {
+    public <T> void encryptList(List<EncryptModel<T>> objects) {
         objects.parallelStream().forEach(s -> {
             try {
                 super.encrypt(s);
@@ -28,7 +27,7 @@ public class CommonFieldEncryption extends BaseFieldEncryption {
     }
 
     @Override
-    public <T> void decryptList(List<T> objects) {
+    public <T> void decryptList(List<EncryptModel<T>> objects) {
         objects.parallelStream().forEach(s -> {
             try {
                 super.decrypt(s);
@@ -36,12 +35,6 @@ public class CommonFieldEncryption extends BaseFieldEncryption {
                 exception.printStackTrace();
             }
         });
-    }
-
-    @Override
-    boolean match(Field field) {
-        SensitiveField sensitiveField = field.getAnnotation(SensitiveField.class);
-        return sensitiveField != null;
     }
 
     @Override
@@ -60,7 +53,7 @@ public class CommonFieldEncryption extends BaseFieldEncryption {
         if (value == null || value.length() == 0) {
             return;
         }
-        String encrypt = LocalAesUtil.encrypt(value);
+        String encrypt = encrypt(value);
         try {
             field.set(param, encrypt);
         } catch (IllegalAccessException exception) {
@@ -84,7 +77,7 @@ public class CommonFieldEncryption extends BaseFieldEncryption {
         if (value == null || value.length() == 0) {
             return;
         }
-        String decry = LocalAesUtil.decrypt(value);
+        String decry = decrypt(value);
         try {
             field.set(param, decry);
         } catch (IllegalAccessException exception) {
@@ -93,7 +86,15 @@ public class CommonFieldEncryption extends BaseFieldEncryption {
     }
 
     @Override
-    <T> List<Field> fieldMatch(T object) {
-        return super.getFields(object).parallelStream().filter(this::match).collect(Collectors.toList());
+    protected <T> EncryptModel<T> fieldMatch(T object) {
+        List<Field> collect = super.getFields(object).parallelStream().filter(this::match).collect(Collectors.toList());
+        if (CollUtil.isEmpty(collect)) {
+            return null;
+        }
+        return new EncryptModel<>(object, this, collect);
     }
+
+    abstract String encrypt(String value);
+
+    abstract String decrypt(String value);
 }

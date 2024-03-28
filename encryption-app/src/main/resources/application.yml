@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: EncryptionApp
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    hikari:
+      connection-test-query: SELECT 1 FROM DUAL
+      connection-timeout: 30000
+      maximum-pool-size: 20
+      max-lifetime: 1800000
+      minimum-idle: 5
+
+mybatis:
+  mapper-locations:
+    - classpath*:mapper/*.xml
+server:
+  port: 12387
+
+
+logging:
+  level:
+    root: debug

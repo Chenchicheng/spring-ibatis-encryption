@@ -1,4 +1,4 @@
-package com.data.encryption.interceptor;
+package encryption.util;
 
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 
@@ -21,7 +21,7 @@ public class LocalAesUtil {
 
     public static String decrypt(String val) {
         util.setIv(DEFAULT_IV.getBytes());
-        String res = null;
+        String res;
         try {
             res = util.decryptStr(val).trim();
         } catch (Exception e) {
